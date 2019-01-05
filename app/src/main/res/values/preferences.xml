@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+    <string name="sex">Woman</string>
+    <string name="hobby">Dancing</string>
+    <string name="profession">Programmer</string>
+</resources>

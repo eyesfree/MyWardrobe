@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">My Wardrobe</string>
+    <string name="willkommen">Willkommen! Schön dass Du hier bist :) Wie heißt Du?</string>
+    <string name="hallo">Hallo %1$s, ich freue mich Dich zu bedienen!</string>
+    <string name="weiter">Weiter</string>
+    <string name="fertig">Fertig</string>
+    <string name="hint_name">First Name</string>
+    <string name="datum">%1$d %2$d, %3$d.</string>
+</resources>
