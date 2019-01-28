@@ -2,6 +2,9 @@ package com.example.krisi.mywardrobe;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -12,8 +15,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.text.DateFormat;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class MainActivity extends Activity {
 
@@ -23,6 +26,9 @@ public class MainActivity extends Activity {
     private boolean firstClick;
     private TextView date;
     private static final String TAG = MainActivity.class.getSimpleName();
+    private RecyclerView recyclerView;
+    private WearableAdapter wearableAdapter;
+    private List<Wearable> wearablesContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +50,7 @@ public class MainActivity extends Activity {
         date = (TextView) findViewById(R.id.date);
         String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
         date.setText(currentDateTimeString);
+        recyclerView = (RecyclerView) findViewById(R.id.items);
 
         welcomeMessage.setText(R.string.willkommen);
         next.setText(R.string.weiter);
@@ -69,6 +76,13 @@ public class MainActivity extends Activity {
             }
         });
 
+        wearableAdapter = new WearableAdapter(wearablesContent);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(wearableAdapter);
+
+        prepareWearablesContent();
         // listening for Enter Press
         name.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -94,5 +108,17 @@ public class MainActivity extends Activity {
                 next.setEnabled(name.length() > 0);
             }
         });
+        }
+
+    private void prepareWearablesContent() {
+        Wearable jeans = new Wearable("Enge Jeans BG", "Hose", "getragen");
+        Wearable sweater = new Wearable("Orangene Thermo Puli", "Bluse", "getragen");
+        Wearable dress = new Wearable("Purple Long Dress", "Kleid", "frisch");
+
+        wearablesContent.add(jeans);
+        wearablesContent.add(sweater);
+        wearablesContent.add(dress);
+
+        wearableAdapter.notifyDataSetChanged();
     }
 }
