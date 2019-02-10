@@ -1,22 +1,18 @@
 package com.example.krisi.mywardrobe;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.View;
+import android.view.*;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.util.Date;
-import java.util.List;
 
 public class MainActivity extends Activity {
 
@@ -25,10 +21,10 @@ public class MainActivity extends Activity {
     private EditText name;
     private boolean firstClick;
     private TextView date;
+    private Button showContextMenu;
+    private TextView menuText;
     private static final String TAG = MainActivity.class.getSimpleName();
-    private RecyclerView recyclerView;
-    private WearableAdapter wearableAdapter;
-    private List<Wearable> wearablesContent;
+    public static final String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,15 +46,17 @@ public class MainActivity extends Activity {
         date = (TextView) findViewById(R.id.date);
         String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
         date.setText(currentDateTimeString);
-        recyclerView = (RecyclerView) findViewById(R.id.items);
+        showContextMenu = (Button) findViewById(R.id.show);
+        menuText = (TextView) findViewById(R.id.menuText);
 
         welcomeMessage.setText(R.string.willkommen);
         next.setText(R.string.weiter);
         next.setEnabled(false); // is enabled when there is a name entered by the user
         firstClick = true;
 
-        next.setOnClickListener(new View.OnClickListener(){
+        registerForContextMenu(showContextMenu);
 
+        next.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
@@ -71,18 +69,15 @@ public class MainActivity extends Activity {
                     next.setText(R.string.fertig);
                     firstClick = false;
                 } else {
-                    finish();
+                    // finish();
+                    Intent goToWardrobe;
+                    goToWardrobe = new Intent(MainActivity.this, WardrobeActivity.class);
+                    startActivity(goToWardrobe);
                 }
             }
         });
 
-        wearableAdapter = new WearableAdapter(wearablesContent);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(wearableAdapter);
 
-        prepareWearablesContent();
         // listening for Enter Press
         name.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -110,15 +105,23 @@ public class MainActivity extends Activity {
         });
         }
 
-    private void prepareWearablesContent() {
-        Wearable jeans = new Wearable("Enge Jeans BG", "Hose", "getragen");
-        Wearable sweater = new Wearable("Orangene Thermo Puli", "Bluse", "getragen");
-        Wearable dress = new Wearable("Purple Long Dress", "Kleid", "frisch");
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo info) {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.optionsmenu, menu);
+        }
 
-        wearablesContent.add(jeans);
-        wearablesContent.add(sweater);
-        wearablesContent.add(dress);
+        public boolean onContextItemSelected(MenuItem item) {
+            switch(item.getItemId()) {
+                case R.id.item1:
+                    menuText.setText(item.getTitle());
+                    return true;
+                case R.id.item2:
+                    menuText.setText(item.getTitle());
+                    return true;
+                default:
+                    return super.onContextItemSelected(item);
+            }
+        }
 
-        wearableAdapter.notifyDataSetChanged();
-    }
 }

@@ -37,4 +37,5 @@ public class Wearable {
     public void setState(String state) {
         this.state = state;
     }
+
 }
